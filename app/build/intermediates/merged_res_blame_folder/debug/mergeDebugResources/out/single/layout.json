@@ -1,0 +1,30 @@
+[
+    {
+        "merged": "com.pumpkin.gui.app-mergeDebugResources-39:/layout/fragment_world.xml",
+        "source": "com.pumpkin.gui.app-main-42:/layout/fragment_world.xml"
+    },
+    {
+        "merged": "com.pumpkin.gui.app-mergeDebugResources-39:/layout/fragment_network.xml",
+        "source": "com.pumpkin.gui.app-main-42:/layout/fragment_network.xml"
+    },
+    {
+        "merged": "com.pumpkin.gui.app-mergeDebugResources-39:/layout/activity_main.xml",
+        "source": "com.pumpkin.gui.app-main-42:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.pumpkin.gui.app-mergeDebugResources-39:/layout/fragment_config.xml",
+        "source": "com.pumpkin.gui.app-main-42:/layout/fragment_config.xml"
+    },
+    {
+        "merged": "com.pumpkin.gui.app-mergeDebugResources-39:/layout/fragment_files.xml",
+        "source": "com.pumpkin.gui.app-main-42:/layout/fragment_files.xml"
+    },
+    {
+        "merged": "com.pumpkin.gui.app-mergeDebugResources-39:/layout/item_file.xml",
+        "source": "com.pumpkin.gui.app-main-42:/layout/item_file.xml"
+    },
+    {
+        "merged": "com.pumpkin.gui.app-mergeDebugResources-39:/layout/fragment_console.xml",
+        "source": "com.pumpkin.gui.app-main-42:/layout/fragment_console.xml"
+    }
+]

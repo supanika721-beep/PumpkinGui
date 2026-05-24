@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Main content -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#0D1117">
+
+        <!-- Top bar -->
+        <LinearLayout
+            android:id="@+id/topBar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:background="#161B22"
+            android:gravity="center_vertical"
+            android:paddingStart="4dp"
+            android:paddingEnd="12dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/btnMenu"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@android:drawable/ic_menu_sort_by_size"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:tint="#F0F6FC" />
+
+            <!-- Title + Local IP in one column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="6dp">
+
+                <TextView
+                    android:id="@+id/tvPageTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Console"
+                    android:textColor="#F0F6FC"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvTopBarLocalIp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Local IP: …"
+                    android:textColor="#6272A4"
+                    android:textSize="10sp"
+                    android:typeface="monospace" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="● STOPPED"
+                android:textColor="#FF5555"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Fragment container -->
+        <FrameLayout
+            android:id="@+id/fragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/topBar"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Sidebar / Navigation Drawer -->
+    <LinearLayout
+        android:id="@+id/drawer"
+        android:layout_width="220dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:orientation="vertical"
+        android:background="#161B22"
+        android:paddingTop="48dp">
+
+        <!-- Server name -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🎃 Pumpkin Server"
+            android:textColor="#F0F6FC"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:paddingStart="20dp"
+            android:paddingBottom="20dp" />
+
+        <!-- Nav items -->
+        <TextView
+            android:id="@+id/navConsole"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="  💻  Console"
+            android:textColor="#F0F6FC"
+            android:textSize="14sp"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:background="?attr/selectableItemBackground" />
+
+        <TextView
+            android:id="@+id/navFiles"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="  📂  Files"
+            android:textColor="#8B949E"
+            android:textSize="14sp"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:background="?attr/selectableItemBackground" />
+
+        <TextView
+            android:id="@+id/navConfig"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="  ⚙️  Config"
+            android:textColor="#8B949E"
+            android:textSize="14sp"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:background="?attr/selectableItemBackground" />
+
+        <TextView
+            android:id="@+id/navWorld"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="  🌍  World"
+            android:textColor="#8B949E"
+            android:textSize="14sp"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:background="?attr/selectableItemBackground" />
+
+        <TextView
+            android:id="@+id/navNetwork"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="  🌐  Network"
+            android:textColor="#8B949E"
+            android:textSize="14sp"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:background="?attr/selectableItemBackground" />
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="#30363D" />
+
+        <!-- Start/Stop di sidebar -->
+        <Button
+            android:id="@+id/btnStartStop"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="▶  Start Server"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#238636"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btnRestart"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:text="↺  Restart"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#9E6A03"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>

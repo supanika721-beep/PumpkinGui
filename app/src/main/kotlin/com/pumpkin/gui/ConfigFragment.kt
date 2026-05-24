@@ -24,6 +24,9 @@ class ConfigFragment : Fragment() {
     private var btnReload:       TextView?     = null
     private var btnImport:       TextView?     = null
     private var tvStatus:        TextView?     = null
+    private var tvUnsavedBadge:  TextView?     = null
+
+    private var hasUnsavedChanges = false
 
     private val configFile      get() = File(requireContext().filesDir, "config/configuration.toml")
     private val crashReportsDir get() = File(requireContext().filesDir, "crash-reports")
@@ -58,6 +61,7 @@ class ConfigFragment : Fragment() {
         btnReload       = view.findViewById(R.id.btnReloadConfig)
         btnImport       = view.findViewById(R.id.btnImportConfig)
         tvStatus        = view.findViewById(R.id.tvConfigStatus)
+        tvUnsavedBadge  = view.findViewById(R.id.tvUnsavedBadge)
 
         btnSave?.setOnClickListener   { saveConfig() }
         btnReload?.setOnClickListener { loadConfig() }
@@ -201,6 +205,7 @@ class ConfigFragment : Fragment() {
                     if (!isAdded) return@runOnUiThread
                     entries.clear(); widgets.clear(); container.removeAllViews()
                     tvStatus?.visibility = View.GONE; setSaveEnabled(true)
+                    setUnsaved(false)
                     var sectionShown = ""
                     parsed.forEach { (idx, entry) ->
                         entries.add(entry)
@@ -232,6 +237,17 @@ class ConfigFragment : Fragment() {
     private fun setSaveEnabled(on: Boolean) {
         btnSave?.alpha       = if (on) 1f else 0.5f
         btnSave?.isClickable = on
+    }
+
+    /** Show/hide the "● Unsaved" badge and tint the Save button */
+    private fun setUnsaved(dirty: Boolean) {
+        if (hasUnsavedChanges == dirty) return
+        hasUnsavedChanges = dirty
+        tvUnsavedBadge?.visibility = if (dirty) View.VISIBLE else View.GONE
+        btnSave?.setBackgroundColor(
+            if (dirty) 0xFFD29922.toInt()   // amber — draws attention
+            else       0xFF238636.toInt()    // default green
+        )
     }
 
     private fun parseKV(line: String): ConfigEntry {
@@ -308,38 +324,58 @@ class ConfigFragment : Fragment() {
         return this
     }
 
+    /** Attach a TextWatcher that marks config dirty after any user edit.
+     *  Must be called BEFORE setText() so the initial load is counted as "first fire". */
+    private fun EditText.markDirtyOnChange(): EditText {
+        var skipNext = true   // the very next change (from setText) is skipped
+        addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, st: Int, c: Int, a: Int) {}
+            override fun onTextChanged(s: CharSequence?, st: Int, b: Int, c: Int) {}
+            override fun afterTextChanged(s: android.text.Editable?) {
+                if (skipNext) { skipNext = false; return }
+                setUnsaved(true)
+            }
+        })
+        return this
+    }
+
     private fun addBoolRow(parent: LinearLayout, idx: Int, e: ConfigEntry.BoolField) {
         val r = row(parent, e.key)
         SwitchCompat(ctx()).apply {
             isChecked = e.value
             thumbTintList = android.content.res.ColorStateList.valueOf(0xFF50FA7B.toInt())
             trackTintList = android.content.res.ColorStateList.valueOf(0xFF30363D.toInt())
+            setOnCheckedChangeListener { _, _ -> setUnsaved(true) }
         }.also { sw -> r.addView(sw); widgets[idx] = sw }
     }
 
     private fun addIntRow(parent: LinearLayout, idx: Int, e: ConfigEntry.IntField) {
         val r = row(parent, e.key)
         EditText(ctx()).apply {
-            setText(e.value.toString())
             inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
             textSize = 12f; typeface = Typeface.MONOSPACE
             setTextColor(0xFFF1FA8C.toInt()); setBackgroundColor(0xFF0D1117.toInt())
             setPadding(8, 4, 8, 4)
             layoutParams = LinearLayout.LayoutParams(180, ViewGroup.LayoutParams.WRAP_CONTENT)
-            gravity = Gravity.END; withAutoSelect()
+            gravity = Gravity.END
+            markDirtyOnChange()        // register BEFORE setText so skip covers initial load
+            setText(e.value.toString())
+            withAutoSelect()
         }.also { et -> r.addView(et); widgets[idx] = et }
     }
 
     private fun addFloatRow(parent: LinearLayout, idx: Int, e: ConfigEntry.FloatField) {
         val r = row(parent, e.key)
         EditText(ctx()).apply {
-            setText(e.value.toString())
             inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
             textSize = 12f; typeface = Typeface.MONOSPACE
             setTextColor(0xFFFFB86C.toInt()); setBackgroundColor(0xFF0D1117.toInt())
             setPadding(8, 4, 8, 4)
             layoutParams = LinearLayout.LayoutParams(180, ViewGroup.LayoutParams.WRAP_CONTENT)
-            gravity = Gravity.END; withAutoSelect()
+            gravity = Gravity.END
+            markDirtyOnChange()
+            setText(e.value.toString())
+            withAutoSelect()
         }.also { et -> r.addView(et); widgets[idx] = et }
     }
 
@@ -350,11 +386,13 @@ class ConfigFragment : Fragment() {
         }
         val r = row(parent, e.key)
         EditText(ctx()).apply {
-            setText(e.value); inputType = InputType.TYPE_CLASS_TEXT
+            inputType = InputType.TYPE_CLASS_TEXT
             textSize = 12f; typeface = Typeface.MONOSPACE
             setTextColor(0xFFF8F8F2.toInt()); setBackgroundColor(0xFF0D1117.toInt())
             setPadding(8, 4, 8, 4)
             layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+            markDirtyOnChange()
+            setText(e.value)
             withAutoSelect()
         }.also { et -> r.addView(et); widgets[idx] = et }
     }
@@ -370,6 +408,15 @@ class ConfigFragment : Fragment() {
             val sel = options.indexOfFirst { it.equals(current, ignoreCase = true) }
             if (sel >= 0) setSelection(sel)
             setBackgroundColor(0xFF21262D.toInt())
+            // Skip the first onItemSelected fired by setSelection() during load
+            var loaded = false
+            onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p: android.widget.AdapterView<*>?, v: View?, pos: Int, id: Long) {
+                    if (!loaded) { loaded = true; return }
+                    setUnsaved(true)
+                }
+                override fun onNothingSelected(p: android.widget.AdapterView<*>?) {}
+            }
         }.also { sp -> r.addView(sp); widgets[idx] = sp }
     }
 
@@ -425,6 +472,7 @@ class ConfigFragment : Fragment() {
             }
             configFile.parentFile?.mkdirs()
             configFile.writeText(sb.toString().trimEnd() + "\n")
+            setUnsaved(false)
             Toast.makeText(requireContext(), "✅ Saved! Restart server to apply.", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Save failed: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -498,7 +546,10 @@ class ConfigFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        entries.clear()
+        widgets.clear()
+        hasUnsavedChanges = false
         scrollContainer = null; btnSave = null; btnReload = null
-        btnImport = null; tvStatus = null
+        btnImport = null; tvStatus = null; tvUnsavedBadge = null
     }
 }

@@ -4,36 +4,46 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D1117">
+    android:background="@color/bg_main">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#0D1117">
+        android:orientation="vertical">
 
-        <TextView
+        <!-- Header bar -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="  🌍  World Manager"
-            android:textColor="#8B949E"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:paddingStart="12dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:background="#161B22" />
+            android:layout_height="36dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@color/bg_secondary"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="WORLD MANAGER"
+                android:textColor="@color/text_muted"
+                android:textSize="10sp"
+                android:letterSpacing="0.1" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvWorlds"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="4dp"
-            android:paddingBottom="80dp"
+            android:paddingBottom="72dp"
             android:clipToPadding="false" />
     </LinearLayout>
 
-    <!-- FAB Import World -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabImportWorld"
         android:layout_width="wrap_content"
@@ -42,7 +52,7 @@
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_menu_upload"
         android:contentDescription="Import world"
-        app:backgroundTint="#238636"
+        app:backgroundTint="@color/status_running"
         app:tint="#FFFFFF" />
 
 </FrameLayout>

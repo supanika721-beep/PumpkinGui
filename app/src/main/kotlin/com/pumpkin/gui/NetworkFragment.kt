@@ -33,13 +33,15 @@ class NetworkFragment : Fragment() {
     // publicIpVisible is local to the view lifecycle (reset to hidden on each entry)
     private var publicIpVisible = false
 
-    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private var scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View =
         i.inflate(R.layout.fragment_network, c, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Recreate scope each time the view is created (previous scope was cancelled in onDestroyView)
+        scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
         tvLocalIp       = view.findViewById(R.id.tvLocalIp)
         tvLocalIpStatus = view.findViewById(R.id.tvLocalIpStatus)
         btnCopyLocalIp  = view.findViewById(R.id.btnCopyLocalIp)
@@ -187,11 +189,12 @@ class NetworkFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        scope.cancel()
         tvLocalIp = null; tvLocalIpStatus = null; btnCopyLocalIp = null
         tvPublicIp = null; tvPublicIpHint = null
         tvJavaPort = null; tvBedrockPort = null
         btnRefresh = null; btnToggleIp = null
     }
 
-    override fun onDestroy() { super.onDestroy(); scope.cancel() }
+    override fun onDestroy() { super.onDestroy() }
 }

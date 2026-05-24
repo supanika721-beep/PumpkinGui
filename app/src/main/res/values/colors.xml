@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <!-- Modern Dark Palette (GitHub/VS Code Inspired) -->
+    <color name="bg_main">#0D1117</color>
+    <color name="bg_secondary">#161B22</color>
+    <color name="bg_card">#21262D</color>
+    
+    <color name="text_primary">#E6EDF3</color>
+    <color name="text_secondary">#8B949E</color>
+    <color name="text_muted">#484F58</color>
+    
+    <color name="accent_primary">#58A6FF</color>
+    <color name="accent_secondary">#1F6FEB</color>
+    
+    <color name="status_running">#238636</color>
+    <color name="status_stopped">#DA3633</color>
+    <color name="status_starting">#D29922</color>
+    
+    <color name="terminal_bg">#010409</color>
+    <color name="divider">#30363D</color>
 </resources>

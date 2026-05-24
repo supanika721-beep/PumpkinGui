@@ -4,56 +4,57 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D1117">
+    android:background="@color/bg_main">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Breadcrumb path -->
+        <!-- Breadcrumb bar -->
         <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#161B22"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+            android:layout_height="36dp"
+            android:background="@color/bg_secondary">
 
             <TextView
                 android:id="@+id/tvBreadcrumb"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="/ server"
-                android:textColor="#8BE9FD"
+                android:textColor="@color/accent_primary"
                 android:textSize="12sp"
-                android:typeface="monospace" />
+                android:typeface="monospace"
+                android:gravity="center_vertical"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp" />
         </HorizontalScrollView>
 
-        <!-- Folder action bar: shown only inside logs/ and crash-reports/ -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider" />
+
+        <!-- Folder action bar (clear logs / clear crash reports) -->
         <TextView
             android:id="@+id/btnFolderAction"
             android:layout_width="match_parent"
-            android:layout_height="38dp"
+            android:layout_height="36dp"
             android:gravity="center"
-            android:textColor="#FF5555"
+            android:textColor="@color/status_stopped"
             android:textSize="12sp"
-            android:background="#1A0000"
+            android:background="#0D1117"
             android:visibility="gone" />
 
-        <!-- File list -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvFiles"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#0D1117"
-            android:paddingBottom="80dp"
+            android:paddingBottom="72dp"
             android:clipToPadding="false" />
 
     </LinearLayout>
 
-    <!-- FAB Upload - xmlns:app di root bukan di sini -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabUpload"
         android:layout_width="wrap_content"
@@ -62,7 +63,7 @@
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_menu_add"
         android:contentDescription="Upload file"
-        app:backgroundTint="#1F6FEB"
+        app:backgroundTint="@color/accent_secondary"
         app:tint="#FFFFFF" />
 
 </FrameLayout>
